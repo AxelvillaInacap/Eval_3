@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmar Eliminación</title>
+</head>
+<body>
+    <h1>¿Estás seguro de que quieres eliminar esta empresa?</h1>
+    
+    <p><strong>{{ empresa.razon_social }}</strong></p>
+
+    <form method="POST">
+        {% csrf_token %}
+        
+        <button type="submit">Sí, eliminar</button>
+        
+        <a href="{% url 'detalle_empresa' empresa.pk %}">Cancelar</a>
+    </form>
+
+</body>
+</html>

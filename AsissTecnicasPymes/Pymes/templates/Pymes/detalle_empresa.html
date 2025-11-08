@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle: {{ empresa.razon_social }}</title>
+</head>
+<body>
+    <h1>{{ empresa.razon_social }}</h1>
+
+    <h2>Información de la Empresa</h2>
+    <ul>
+        <li><strong>RUT:</strong> {{ empresa.rut }}</li>
+        <li><strong>Giro:</strong> {{ empresa.giro }}</li>
+        <li><strong>Teléfono:</strong> {{ empresa.telefono }}</li>
+        <li><strong>Email:</strong> {{ empresa.email }}</li>
+        <li><strong>Dirección:</strong> {{ empresa.direccion }}</li>
+        <li><strong>Comuna:</strong> {{ empresa.comuna }}</li>
+    </ul>
+
+    <hr>
+
+    <a href="{% url 'lista_empresas' %}">Volver al listado</a>
+</body>
+</html>

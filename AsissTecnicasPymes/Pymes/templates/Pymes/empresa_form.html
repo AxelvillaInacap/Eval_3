@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Nueva Empresa</title>
+</head>
+<body>
+    <h1>Formulario de Empresa</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">Guardar Empresa</button>
+    </form>
+
+    <hr>
+    <a href="{% url 'lista_empresas' %}">Cancelar y volver al listado</a>
+
+</body>
+</html>

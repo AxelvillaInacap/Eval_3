@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Empresas</title>
+</head>
+<body>
+    <h1>Empresas Registradas</h1>
+
+    <form method="GET" action="{% url 'lista_empresas' %}">
+        <input type="text" name="q" placeholder="Buscar por Razón Social o RUT" value="{{ query|default:'' }}">
+        <button type="submit">Buscar</button>
+    </form>
+
+    <hr>
+
+    <a href="{% url 'crear_empresa' %}">Crear Nueva Empresa</a>
+
+    <hr>
+
+    {% for empresa in empresas %}
+        <article>
+            <h2>
+                <a href="{% url 'detalle_empresa' empresa.pk %}">
+                    {{ empresa.razon_social }}
+                </a>
+            </h2>
+            <p>RUT: {{ empresa.rut }}</p>
+            <p>Email: {{ empresa.email }}</p>
+
+            <p>
+                <a href="{% url 'actualizar_empresa' empresa.pk %}">Editar</a>
+                |
+                <a href="{% url 'eliminar_empresa' empresa.pk %}">Eliminar</a>
+            </p>
+
+        </article>
+        <hr>
+    {% empty %}
+        <p>No hay empresas registradas por el momento (o que coincidan con tu búsqueda).</p>
+    {% endfor %}
+    </body>
+</html>

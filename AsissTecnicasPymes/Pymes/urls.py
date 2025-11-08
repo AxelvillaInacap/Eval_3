@@ -20,4 +20,18 @@ urlpatterns = [
 
     # (GET, POST) /pymes/empresa/5/eliminar/
     path('empresa/<int:pk>/eliminar/', views.eliminar_empresa, name='eliminar_empresa'),
+
+    path('servicios/', views.lista_servicios, name='lista_servicios'),
+    
+    # Read (Detail)
+    path('servicio/<int:pk>/', views.detalle_servicio, name='detalle_servicio'),
+    
+    # Create
+    path('servicio/crear/', views.crear_servicio, name='crear_servicio'),
+    
+    # Update
+    path('servicio/<int:pk>/actualizar/', views.actualizar_servicio, name='actualizar_servicio'),
+    
+    # Delete
+    path('servicio/<int:pk>/eliminar/', views.eliminar_servicio, name='eliminar_servicio'),
 ]

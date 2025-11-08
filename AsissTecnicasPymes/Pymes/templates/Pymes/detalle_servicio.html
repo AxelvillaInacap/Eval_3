@@ -1,0 +1,18 @@
+{% extends 'Pymes/base.html' %}
+
+{% block content %}
+<h1>{{ servicio.nombre }}</h1>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Detalles del Servicio</h5>
+        <p><strong>Descripción:</strong> {{ servicio.descripcion|linebreaksbr|default:"N/A" }}</p>
+        <p><strong>Categoría:</strong> {{ servicio.get_categoria_display }}</p>
+        <p><strong>Duración Estimada:</strong> {{ servicio.dur_est_horas }} horas</p> <p><strong>Estado:</strong> {% if servicio.activo %}Activo{% else %}Inactivo{% endif %}</p>
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'lista_servicios' %}" class="btn btn-secondary">Volver al listado</a>
+        <a href="{% url 'actualizar_servicio' servicio.pk %}" class="btn btn-warning">Editar</a>
+        <a href="{% url 'eliminar_servicio' servicio.pk %}" class="btn btn-danger">Eliminar</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'Pymes/base.html' %} {% block content %}
+<h1>Listado de Servicios</h1>
+
+<div class="mb-3">
+    <form method="GET" action="{% url 'lista_servicios' %}">
+        <div class="input-group">
+            <input type="text" class="form-control" name="q" value="{{ query|default:'' }}" placeholder="Buscar por nombre o categoría...">
+            <button class="btn btn-primary" type="submit">Buscar</button>
+        </div>
+    </form>
+</div>
+
+<a href="{% url 'crear_servicio' %}" class="btn btn-success mb-3">Crear Nuevo Servicio</a>
+
+{% if servicios %}
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Categoría</th>
+                    <th>Duración (Horas)</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for servicio in servicios %}
+                <tr>
+                    <td>{{ servicio.nombre }}</td>
+                    <td>{{ servicio.get_categoria_display }}</td>
+                    <td>{{ servicio.dur_est_horas }}</td> <td>
+                        {% if servicio.activo %}
+                            <span class="badge bg-success">Activo</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'detalle_servicio' servicio.pk %}" class="btn btn-info btn-sm">Ver</a>
+                        <a href="{% url 'actualizar_servicio' servicio.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="{% url 'eliminar_servicio' servicio.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <p>No se encontraron servicios.</p>
+{% endif %}
+
+{% endblock %}

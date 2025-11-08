@@ -24,8 +24,22 @@ class EmpresaAdmin(admin.ModelAdmin):
 
 @admin.register(Servicio)
 class ServicioAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'categoria', 'activo')
+    """
+    Personalización del Admin para el modelo Servicio.
+    Cumple con R.T. Django Admin.
+    """
+    
+    # Columnas a mostrar en el listado
+    list_display = ('nombre', 'categoria', 'dur_est_horas', 'activo')
+    
+    # Filtros laterales (solicitados por categoría y activo) [cite: 71]
     list_filter = ('categoria', 'activo')
+    
+    # Campos de búsqueda
+    search_fields = ('nombre', 'descripcion', 'categoria')
+    
+    # Orden por defecto
+    ordering = ('nombre',)
 
 @admin.register(Profesional)
 class ProfesionalAdmin(admin.ModelAdmin):

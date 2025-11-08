@@ -1,7 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .models import Empresa
 from .forms import EmpresaForm 
+from .models import Servicio
+from .forms import ServicioForm
 
 def lista_empresas(request):
     """
@@ -100,3 +104,113 @@ def eliminar_empresa(request, pk):
         'empresa': empresa
     }
     return render(request, 'pymes/empresa_confirm_delete.html', contexto)
+
+def lista_servicios(request):
+    """
+    Lista servicios con búsqueda por nombre o categoría.
+    Cumple con R.F. 1.a (listar) y 2 (Búsqueda)[cite: 68, 71].
+    """
+    query = request.GET.get('q', '').strip()
+    
+    if query:
+        # Búsqueda por nombre O categoría (usando Q objects)
+        servicios = Servicio.objects.filter(
+            Q(nombre__icontains=query) |
+            Q(categoria__icontains=query)
+        ).order_by('nombre')
+    else:
+        servicios = Servicio.objects.all().order_by('nombre')
+        
+    context = {
+        'servicios': servicios,
+        'query': query
+    }
+    return render(request, 'Pymes/lista_servicios.html', context)
+
+
+def detalle_servicio(request, pk):
+    """
+    Muestra el detalle de un servicio.
+    Cumple con R.F. 1.a (ver detalle)[cite: 68].
+    """
+    servicio = get_object_or_404(Servicio, pk=pk)
+    context = {
+        'servicio': servicio
+    }
+    return render(request, 'Pymes/detalle_servicio.html', context)
+
+
+# --- CREACIÓN (Create) ---
+
+@login_required  # Requiere autenticación [cite: 84]
+def crear_servicio(request):
+    """
+    Crea un nuevo servicio.
+    Cumple con R.F. 1.a (Crear)[cite: 68].
+    """
+    if request.method == 'POST':
+        form = ServicioForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, '¡Servicio creado exitosamente!')
+            return redirect('lista_servicios')
+        else:
+            messages.error(request, 'Error al crear el servicio. Revisa los campos.') [cite: 70]
+    else:
+        form = ServicioForm()
+        
+    context = {
+        'form': form,
+        'titulo': 'Crear Nuevo Servicio'
+    }
+    return render(request, 'Pymes/servicio_form.html', context)
+
+
+# --- ACTUALIZACIÓN (Update) ---
+
+@login_required  # Requiere autenticación [cite: 84]
+def actualizar_servicio(request, pk):
+    """
+    Actualiza un servicio existente.
+    Cumple con R.F. 1.a (actualizar)[cite: 68].
+    """
+    servicio = get_object_or_404(Servicio, pk=pk)
+    
+    if request.method == 'POST':
+        form = ServicioForm(request.POST, instance=servicio)
+        if form.is_valid():
+            form.save()
+            messages.success(request, '¡Servicio actualizado exitosamente!')
+            return redirect('detalle_servicio', pk=servicio.pk)
+        else:
+            messages.error(request, 'Error al actualizar. Revisa los campos.') [cite: 70]
+    else:
+        form = ServicioForm(instance=servicio)
+        
+    context = {
+        'form': form,
+        'titulo': f'Actualizar Servicio: {servicio.nombre}'
+    }
+    return render(request, 'Pymes/servicio_form.html', context)
+
+
+# --- ELIMINACIÓN (Delete) ---
+
+@login_required  # Requiere autenticación [cite: 84]
+def eliminar_servicio(request, pk):
+    """
+    Elimina un servicio (con confirmación).
+    Cumple con R.F. 1.a (eliminar)[cite: 68].
+    """
+    servicio = get_object_or_404(Servicio, pk=pk)
+    
+    if request.method == 'POST':
+        nombre_servicio = servicio.nombre
+        servicio.delete()
+        messages.success(request, f'Servicio "{nombre_servicio}" eliminado.')
+        return redirect('lista_servicios')
+        
+    context = {
+        'servicio': servicio
+    }
+    return render(request, 'Pymes/servicio_confirm_delete.html', context)

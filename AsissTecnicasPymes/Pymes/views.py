@@ -222,8 +222,8 @@ def lista_profesionales(request):
 
     if query:
         profesionales = Profesional.objects.filter(
-            Q(nombre__icontains=query) |
-            Q(apellido__icontains=query) |
+            Q(nombres__icontains=query) |
+            Q(apellidos__icontains=query) |
             Q(especialidad__icontains=query)
         ).order_by('apellidos', 'nombres')
     else:

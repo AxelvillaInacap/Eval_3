@@ -218,22 +218,22 @@ def eliminar_servicio(request, pk):
 # Muestra una lista con los datos de los profesionales
 @login_required
 def lista_profesionales(request):
-    consulta = request.GET.get('q', '').strip()
+    query = request.GET.get('q', '').strip()
 
-    if consulta:
+    if query:
         profesionales = Profesional.objects.filter(
-            Q(nombre__icontains=consulta) |
-            Q(apellido__icontains=consulta) |
-            Q(especialidad__icontains=consulta)
-        ).order_by('apellido', 'nombre')
+            Q(nombre__icontains=query) |
+            Q(apellido__icontains=query) |
+            Q(especialidad__icontains=query)
+        ).order_by('apellidos', 'nombres')
     else:
-        profesionales = Profesional.objects.all().order_by('apellido', 'nombre')
+        profesionales = Profesional.objects.all().order_by('apellidos', 'nombres')
 
-        context = {
+    context = {
             'profesionales': profesionales,
-            'consulta': consulta
+            'query': query
         }
-        return render(request, 'Pymes/lista_profesionales.html', context)
+    return render(request, 'Pymes/lista_profesionales.html', context)
 
 # Muestra el detalle de un profesional
 @login_required

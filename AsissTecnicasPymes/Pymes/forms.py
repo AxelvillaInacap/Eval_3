@@ -54,17 +54,17 @@ class ProfesionalForm(forms.ModelForm):
     class Meta:
         model = Profesional
         fields = [
-            'nombre', 
-            'apellido', 
-            'especialidad', 
-            'telefono',    
+            'run',
+            'nombres', 
+            'apellidos', 
+            'especialidad',    
             'email'
         ]
         
         widgets = {
-            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
-            'apellido': forms.TextInput(attrs={'class': 'form-control'}),
+            'run': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: 12345678-9'}),
+            'nombres': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Juan Andrés'}),
+            'apellidos': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Pérez González'}),
             'especialidad': forms.TextInput(attrs={'class': 'form-control'}),
-            'telefono': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
         }

@@ -6,6 +6,8 @@ from .models import Empresa
 from .forms import EmpresaForm 
 from .models import Servicio
 from .forms import ServicioForm
+from .models import Profesional
+from .forms import ProfesionalForm
 
 def lista_empresas(request):
     """
@@ -155,7 +157,7 @@ def crear_servicio(request):
             messages.success(request, '¡Servicio creado exitosamente!')
             return redirect('lista_servicios')
         else:
-            messages.error(request, 'Error al crear el servicio. Revisa los campos.') [cite: 70]
+            messages.error(request, 'Error al crear el servicio. Revisa los campos.') 
     else:
         form = ServicioForm()
         
@@ -183,7 +185,7 @@ def actualizar_servicio(request, pk):
             messages.success(request, '¡Servicio actualizado exitosamente!')
             return redirect('detalle_servicio', pk=servicio.pk)
         else:
-            messages.error(request, 'Error al actualizar. Revisa los campos.') [cite: 70]
+            messages.error(request, 'Error al actualizar. Revisa los campos.')
     else:
         form = ServicioForm(instance=servicio)
         
@@ -194,9 +196,7 @@ def actualizar_servicio(request, pk):
     return render(request, 'Pymes/servicio_form.html', context)
 
 
-# --- ELIMINACIÓN (Delete) ---
-
-@login_required  # Requiere autenticación [cite: 84]
+@login_required  # Requiere autenticación 
 def eliminar_servicio(request, pk):
     """
     Elimina un servicio (con confirmación).
@@ -214,3 +214,94 @@ def eliminar_servicio(request, pk):
         'servicio': servicio
     }
     return render(request, 'Pymes/servicio_confirm_delete.html', context)
+
+# Muestra una lista con los datos de los profesionales
+@login_required
+def lista_profesionales(request):
+    consulta = request.GET.get('q', '').strip()
+
+    if consulta:
+        profesionales = Profesional.objects.filter(
+            Q(nombre__icontains=consulta) |
+            Q(apellido__icontains=consulta) |
+            Q(especialidad__icontains=consulta)
+        ).order_by('apellido', 'nombre')
+    else:
+        profesionales = Profesional.objects.all().order_by('apellido', 'nombre')
+
+        context = {
+            'profesionales': profesionales,
+            'consulta': consulta
+        }
+        return render(request, 'Pymes/lista_profesionales.html', context)
+
+# Muestra el detalle de un profesional
+@login_required
+def detalle_profesional(request, pk):
+
+    profesional = get_object_or_404(Profesional, pk=pk)
+    context = {
+        'profesional': profesional
+    }
+    return render(request, 'Pymes/detalle_profesional.html', context)
+
+# Permite crear un nuevo profesional
+@login_required
+def crear_profesional(request):
+    
+    if request.method == 'POST':
+        form = ProfesionalForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, '¡Profesional creado exitosamente!')
+            return redirect('lista_profesionales')
+        else:
+            messages.error(request, 'Error al crear el profesional. Revisa los campos.')
+    else:
+        form = ProfesionalForm()
+        
+    context = {
+        'form': form,
+        'titulo': 'Crear Nuevo Profesional' # Para reutilizar la plantilla
+    }
+    return render(request, 'Pymes/profesional_form.html', context)
+
+# Permite Actualizar datos de un profesional existente
+@login_required
+def actualizar_profesional(request, pk):
+
+    profesional = get_object_or_404(Profesional, pk=pk)
+    
+    if request.method == 'POST':
+        form = ProfesionalForm(request.POST, instance=profesional)
+        if form.is_valid():
+            form.save()
+            messages.success(request, '¡Profesional actualizado exitosamente!')
+            return redirect('detalle_profesional', pk=profesional.pk)
+        else:
+            messages.error(request, 'Error al actualizar. Revisa los campos.')
+    else:
+        form = ProfesionalForm(instance=profesional)
+        
+    context = {
+        'form': form,
+        'titulo': f'Actualizar Profesional: {profesional.nombres} {profesional.apellidos}'
+    }
+    return render(request, 'Pymes/profesional_form.html', context)
+
+# Permite eliminar un profesional existente
+@login_required
+def eliminar_profesional(request, pk):
+
+    profesional = get_object_or_404(Profesional, pk=pk)
+    
+    if request.method == 'POST':
+        nombre_profesional = f"{profesional.nombres} {profesional.apellidos}"
+        profesional.delete()
+        messages.success(request, f'Profesional "{nombre_profesional}" eliminado.')
+        return redirect('lista_profesionales')
+        
+    context = {
+        'profesional': profesional
+    }
+    return render(request, 'Pymes/profesional_confirm_delete.html', context)

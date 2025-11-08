@@ -34,4 +34,19 @@ urlpatterns = [
     
     # Delete
     path('servicio/<int:pk>/eliminar/', views.eliminar_servicio, name='eliminar_servicio'),
+
+    # Permite ver la lista de profesionales
+    path('profesionales/', views.lista_profesionales, name='lista_profesionales'),
+    
+    # Permite leer los detalles de un profesional
+    path('profesional/<int:pk>/', views.detalle_profesional, name='detalle_profesional'),
+    
+    # Permite crear un nuevo profesional
+    path('profesional/crear/', views.crear_profesional, name='crear_profesional'),
+    
+    # Permite actualizar un profesional existente
+    path('profesional/<int:pk>/actualizar/', views.actualizar_profesional, name='actualizar_profesional'),
+    
+    # Permite eliminar un profesional existente
+    path('profesional/<int:pk>/eliminar/', views.eliminar_profesional, name='eliminar_profesional'),
 ]

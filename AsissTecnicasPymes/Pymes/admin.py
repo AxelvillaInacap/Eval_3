@@ -44,7 +44,8 @@ class ServicioAdmin(admin.ModelAdmin):
 @admin.register(Profesional)
 class ProfesionalAdmin(admin.ModelAdmin):
     list_display = ('nombres', 'apellidos', 'especialidad', 'email')
-    search_fields = ('nombres', 'apellidos', 'run')
+    search_fields = ('nombres', 'apellidos', 'run', 'especialidad')
+    list_filter = ('especialidad',)
 
 @admin.register(OrdenServicio)
 class OrdenServicioAdmin(admin.ModelAdmin):

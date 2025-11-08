@@ -1,5 +1,5 @@
 from django import forms
-from .models import Empresa, Servicio
+from .models import Empresa, Servicio,  Profesional
 
 class EmpresaForm(forms.ModelForm):
     """
@@ -49,3 +49,22 @@ class ServicioForm(forms.ModelForm):
     def clean_nombre(self):
         # Limpieza simple de espacios
         return self.cleaned_data['nombre'].strip()
+    
+class ProfesionalForm(forms.ModelForm):
+    class Meta:
+        model = Profesional
+        fields = [
+            'nombre', 
+            'apellido', 
+            'especialidad', 
+            'telefono',    
+            'email'
+        ]
+        
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+            'apellido': forms.TextInput(attrs={'class': 'form-control'}),
+            'especialidad': forms.TextInput(attrs={'class': 'form-control'}),
+            'telefono': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+        }

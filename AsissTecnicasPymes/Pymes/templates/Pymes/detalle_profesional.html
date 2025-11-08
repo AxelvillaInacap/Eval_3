@@ -1,0 +1,27 @@
+{% extends 'Pymes/base.html' %}
+
+{% block content %}
+<h1>{{ profesional.nombres }} {{ profesional.apellidos }}</h1>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{% if message.tags %}{{ message.tags }}{% else %}success{% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Detalles del Profesional</h5>
+        <p><strong>RUN:</strong> {{ profesional.run }}</p>
+        <p><strong>Especialidad:</strong> {{ profesional.especialidad }}</p>
+        <p><strong>Email:</strong> {{ profesional.email }}</p>
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'lista_profesionales' %}" class="btn btn-secondary">Volver al listado</a>
+        <a href="{% url 'actualizar_profesional' profesional.pk %}" class="btn btn-warning">Editar</a>
+        <a href="{% url 'eliminar_profesional' profesional.pk %}" class="btn btn-danger">Eliminar</a>
+    </div>
+</div>
+{% endblock %}

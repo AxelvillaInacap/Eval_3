@@ -1,0 +1,64 @@
+{% extends 'Pymes/base.html' %}
+
+{% block content %}
+
+    {% if form.instance.pk %}
+        <h1>Editar Orden de Servicio</h1>
+    {% else %}
+        <h1>Crear Nueva Orden de Servicio</h1>
+    {% endif %}
+    <hr>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="{{ form.empresa.id_for_label }}" class="form-label">{{ form.empresa.label }}</label>
+                    {{ form.empresa }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.estado.id_for_label }}" class="form-label">{{ form.estado.label }}</label>
+                    {{ form.estado }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.prioridad.id_for_label }}" class="form-label">{{ form.prioridad.label }}</label>
+                    {{ form.prioridad }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.des_requerimiento.id_for_label }}" class="form-label">{{ form.des_requerimiento.label }}</label>
+                    {{ form.des_requerimiento }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">{{ form.ser_seleccionados.label }}</label>
+                    <div class="border rounded p-2" style="max-height: 150px; overflow-y: auto;">
+                        {% for checkbox in form.ser_seleccionados %}
+                        <div class="form-check">
+                            {{ checkbox.tag }}
+                            
+                            <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                {{ checkbox.choice_label }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.pro_asignado.id_for_label }}" class="form-label">{{ form.pro_asignado.label }}</label>
+                    {{ form.pro_asignado }}
+                </div>
+
+                <hr>
+                <button type="submit" class="btn btn-success">Guardar Orden</button>
+                <a href="{% url 'lista_ordenes' %}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

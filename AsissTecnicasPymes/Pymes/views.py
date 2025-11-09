@@ -3,11 +3,14 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .models import Empresa
-from .forms import EmpresaForm 
 from .models import Servicio
-from .forms import ServicioForm
 from .models import Profesional
+from .models import OrdenServicio
+from .forms import EmpresaForm 
+from .forms import ServicioForm
 from .forms import ProfesionalForm
+from .forms import OrdenServicioForm
+
 
 def lista_empresas(request):
     """
@@ -39,6 +42,7 @@ def lista_empresas(request):
 
     return render(request, 'pymes/lista_empresas.html', contexto)
 
+
 def detalle_empresa(request, pk):
     """
     Esta vista muestra los detalles de una empresa específica.
@@ -48,6 +52,7 @@ def detalle_empresa(request, pk):
     return render(request, 'pymes/detalle_empresa.html', contexto)
 
 
+@login_required  # Requiere autenticación [cite: 84]
 def crear_empresa(request):
     """
     Vista para crear una nueva empresa.
@@ -68,6 +73,7 @@ def crear_empresa(request):
     return render(request, 'pymes/empresa_form.html', contexto)
 
 
+@login_required  # Requiere autenticación [cite: 84]
 def actualizar_empresa(request, pk):
     """
     Vista para actualizar una empresa existente.
@@ -90,6 +96,7 @@ def actualizar_empresa(request, pk):
     return render(request, 'pymes/empresa_form.html', contexto)
 
 
+@login_required  # Requiere autenticación [cite: 84]
 def eliminar_empresa(request, pk):
     """
     Vista para eliminar una empresa existente.
@@ -216,7 +223,7 @@ def eliminar_servicio(request, pk):
     return render(request, 'Pymes/servicio_confirm_delete.html', context)
 
 # Muestra una lista con los datos de los profesionales
-@login_required
+# @login_required
 def lista_profesionales(request):
     query = request.GET.get('q', '').strip()
 
@@ -236,7 +243,7 @@ def lista_profesionales(request):
     return render(request, 'Pymes/lista_profesionales.html', context)
 
 # Muestra el detalle de un profesional
-@login_required
+# @login_required
 def detalle_profesional(request, pk):
 
     profesional = get_object_or_404(Profesional, pk=pk)
@@ -305,3 +312,113 @@ def eliminar_profesional(request, pk):
         'profesional': profesional
     }
     return render(request, 'Pymes/profesional_confirm_delete.html', context)
+
+# --- VISTAS PARA ORDEN DE SERVICIO ---
+@login_required
+def crear_orden_servicio(request):
+    """
+    Vista para crear una nueva Orden de Servicio.
+    """
+    if request.method == 'POST':
+        form = OrdenServicioForm(request.POST)
+        if form.is_valid():
+            form.save()
+
+            # --- MODIFICACIÓN AQUÍ ---
+            # Redirigimos a la nueva lista de órdenes
+            return redirect('lista_ordenes') 
+            # --- FIN DE LA MODIFICACIÓN ---
+
+    else: # Si el método es GET
+        form = OrdenServicioForm()
+
+    contexto = {
+        'form': form
+    }
+    return render(request, 'pymes/orden_servicio_form.html', contexto)
+
+def lista_ordenes(request):
+    """
+    Esta vista muestra una lista de todas las Órdenes de Servicio.
+    Usamos 'select_related' y 'prefetch_related' para optimizar la consulta.
+    """
+    ordenes = OrdenServicio.objects.select_related('empresa', 'pro_asignado').prefetch_related('ser_seleccionados').all()
+
+    contexto = {
+        'ordenes': ordenes
+    }
+    return render(request, 'pymes/lista_ordenes.html', contexto)
+
+def detalle_orden(request, pk):
+    """
+    Esta vista muestra el detalle completo de una Orden de Servicio.
+    """
+    # Usamos .select_related y .prefetch_related de nuevo para
+    # optimizar la consulta y traer todo de una vez.
+    orden = get_object_or_404(
+        OrdenServicio.objects.select_related('empresa', 'pro_asignado'),
+        pk=pk
+    )
+    
+    contexto = {
+        'orden': orden
+    }
+    return render(request, 'pymes/detalle_orden.html', contexto)
+
+
+@login_required
+def actualizar_orden(request, pk):
+    """
+    Vista para actualizar una Orden de Servicio existente.
+    """
+    
+    # 1. Obtiene la instancia de la orden que se va a editar
+    orden = get_object_or_404(OrdenServicio, pk=pk)
+    
+    if request.method == 'POST':
+        # 2. Rellena el formulario con los datos enviados (request.POST) Y
+        #    le indica sobre qué instancia específica debe operar (instance=orden).
+        form = OrdenServicioForm(request.POST, instance=orden)
+        
+        if form.is_valid():
+            # 3. Guarda los cambios en la instancia existente.
+            form.save()
+            
+            # 4. Redirige a la página de detalle de esa misma orden.
+            return redirect('detalle_orden', pk=orden.pk)
+            
+    else: # Si es GET
+        # 2. Crea una instancia del formulario y la rellena con los
+        #    datos de la orden existente (instance=orden).
+        form = OrdenServicioForm(instance=orden)
+
+    # 3. Renderiza la MISMA plantilla que 'crear_orden_servicio'
+    #    ('orden_servicio_form.html'), pero el 'form'
+    #    ahora contiene los datos de la orden a editar.
+    contexto = {
+        'form': form
+    }
+    return render(request, 'pymes/orden_servicio_form.html', contexto)
+
+@login_required
+def eliminar_orden(request, pk):
+    """
+    Vista para eliminar una Orden de Servicio existente.
+    (Esta era la Tarea 15.1)
+    """
+    
+    # 1. Obtiene la instancia de la orden que se va a eliminar
+    orden = get_object_or_404(OrdenServicio, pk=pk)
+    
+    if request.method == 'POST':
+        # 2. Si el método es POST, se confirma la eliminación.
+        orden.delete()
+        
+        # 3. Redirige a la lista de órdenes.
+        return redirect('lista_ordenes')
+        
+    # 4. Si el método es GET, muestra la página de confirmación.
+    contexto = {
+        'orden': orden
+    }
+    return render(request, 'pymes/orden_confirm_delete.html', contexto)

@@ -1,0 +1,86 @@
+{% extends 'Pymes/base.html' %}
+
+{% block content %}
+
+    <div class="card shadow-sm mb-3">
+        <div class="card-header">
+            <h1 class="h3 mb-0">Detalle de Orden de Servicio #{{ orden.id }}</h1>
+        </div>
+        
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <h4>Información Principal</h4>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <strong>Empresa:</strong> 
+                            <a href="{% url 'detalle_empresa' orden.empresa.pk %}">{{ orden.empresa.razon_social }}</a>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Profesional Asignado:</strong>
+                            {% if orden.pro_asignado %}
+                                <a href="{% url 'detalle_profesional' orden.pro_asignado.pk %}">{{ orden.pro_asignado.nombres }} {{ orden.pro_asignado.apellidos }}</a>
+                            {% else %}
+                                <span class="text-muted">--- Sin Asignar ---</span>
+                            {% endif %}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Descripción del Requerimiento:</strong>
+                            <p>{{ orden.des_requerimiento|linebreaksbr }}</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h4>Estado y Prioridad</h4>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <strong>Estado:</strong>
+                            {% if orden.estado == 'nueva' %}
+                                <span class="badge bg-primary">Nueva</span>
+                            {% elif orden.estado == 'en_ejecucion' %}
+                                <span class="badge bg-warning text-dark">En Ejecución</span>
+                            {% elif orden.estado == 'finalizada' %}
+                                <span class="badge bg-success">Finalizada</span>
+                            {% else %}
+                                <span class="badge bg-danger">Cancelada</span>
+                            {% endif %}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Prioridad:</strong>
+                            {% if orden.prioridad == 'alta' %}
+                                <span class="badge bg-danger">Alta</span>
+                            {% elif orden.prioridad == 'media' %}
+                                <span class="badge bg-warning text-dark">Media</span>
+                            {% else %}
+                                <span class="badge bg-info">Baja</span>
+                            {% endif %}
+                        </li>
+                         <li class="list-group-item">
+                            <strong>Fecha de Creación:</strong>
+                            {{ orden.fecha_creacion }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <h4>Servicios Seleccionados</h4>
+            <ul class="list-group">
+                {% for servicio in orden.ser_seleccionados.all %}
+                    <li class="list-group-item">
+                        <a href="{% url 'detalle_servicio' servicio.pk %}">{{ servicio.nombre }}</a>
+                        <span class="text-muted float-end">{{ servicio.get_categoria_display }}</span>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item text-muted">No se seleccionaron servicios para esta orden.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div class="card-footer">
+            <a href="{% url 'actualizar_orden' orden.pk %}" class="btn btn-warning">Editar Orden</a>
+            <a href="{% url 'eliminar_orden' orden.pk %}" class="btn btn-danger">Eliminar Orden</a>
+            <a href="{% url 'lista_ordenes' %}" class="btn btn-secondary">Volver al listado</a>
+        </div>
+    </div>
+
+{% endblock %}

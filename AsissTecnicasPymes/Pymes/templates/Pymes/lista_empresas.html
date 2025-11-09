@@ -1,43 +1,41 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Lista de Empresas</title>
-</head>
-<body>
-    <h1>Empresas Registradas</h1>
+{% extends 'Pymes/base.html' %}
 
-    <form method="GET" action="{% url 'lista_empresas' %}">
-        <input type="text" name="q" placeholder="Buscar por Razón Social o RUT" value="{{ query|default:'' }}">
-        <button type="submit">Buscar</button>
-    </form>
+{% block content %}
 
-    <hr>
+    <h1 class="mb-3">Empresas Registradas</h1>
 
-    <a href="{% url 'crear_empresa' %}">Crear Nueva Empresa</a>
+    <div class="mb-3">
+        <form method="GET" action="{% url 'lista_empresas' %}" class="input-group">
+            <input type="text" name="q" placeholder="Buscar por Razón Social o RUT" class="form-control" value="{{ query|default:'' }}">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+    </div>
 
-    <hr>
+    <a href="{% url 'crear_empresa' %}" class="btn btn-success mb-3">Crear Nueva Empresa</a>
 
-    {% for empresa in empresas %}
-        <article>
-            <h2>
-                <a href="{% url 'detalle_empresa' empresa.pk %}">
-                    {{ empresa.razon_social }}
-                </a>
-            </h2>
-            <p>RUT: {{ empresa.rut }}</p>
-            <p>Email: {{ empresa.email }}</p>
+    <div class="list-group">
+        {% for empresa in empresas %}
+            <div class="list-group-item list-group-item-action flex-column align-items-start mb-2">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">
+                        <a href="{% url 'detalle_empresa' empresa.pk %}" class="text-decoration-none">
+                            {{ empresa.razon_social }}
+                        </a>
+                    </h5>
+                    <small>
+                        <a href="{% url 'actualizar_empresa' empresa.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="{% url 'eliminar_empresa' empresa.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+                    </small>
+                </div>
+                <p class="mb-1"><strong>RUT:</strong> {{ empresa.rut }}</p>
+                <small><strong>Email:</strong> {{ empresa.email }}</small>
+            </div>
+        
+        {% empty %}
+            <div class="alert alert-info" role="alert">
+                No hay empresas registradas por el momento (o que coincidan con tu búsqueda).
+            </div>
+        {% endfor %}
+    </div>
 
-            <p>
-                <a href="{% url 'actualizar_empresa' empresa.pk %}">Editar</a>
-                |
-                <a href="{% url 'eliminar_empresa' empresa.pk %}">Eliminar</a>
-            </p>
-
-        </article>
-        <hr>
-    {% empty %}
-        <p>No hay empresas registradas por el momento (o que coincidan con tu búsqueda).</p>
-    {% endfor %}
-    </body>
-</html>
+{% endblock %}

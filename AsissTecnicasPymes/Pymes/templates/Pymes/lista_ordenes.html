@@ -1,0 +1,76 @@
+{% extends 'Pymes/base.html' %}
+
+{% block content %}
+
+    <h1 class="mb-3">Listado de Órdenes de Servicio</h1>
+
+    <a href="{% url 'crear_orden_servicio' %}" class="btn btn-success mb-3">Crear Nueva Orden</a>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Empresa</th>
+                    <th>Estado</th>
+                    <th>Prioridad</th>
+                    <th>Profesional Asignado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for orden in ordenes %}
+                <tr>
+                    <td>
+                        <strong>
+                            <a href="{% url 'detalle_orden' orden.pk %}">#{{ orden.id }}</a>
+                        </strong>
+                    </td>
+                    
+                    <td>{{ orden.empresa.razon_social }}</td>
+                    
+                    <td>
+                        {% if orden.estado == 'nueva' %}
+                            <span class="badge bg-primary">Nueva</span>
+                        {% elif orden.estado == 'en_ejecucion' %}
+                            <span class="badge bg-warning text-dark">En Ejecución</span>
+                        {% elif orden.estado == 'finalizada' %}
+                            <span class="badge bg-success">Finalizada</span>
+                        {% else %}
+                            <span class="badge bg-danger">Cancelada</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if orden.prioridad == 'alta' %}
+                            <span class="badge bg-danger">Alta</span>
+                        {% elif orden.prioridad == 'media' %}
+                            <span class="badge bg-warning text-dark">Media</span>
+                        {% else %}
+                            <span class="badge bg-info">Baja</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if orden.pro_asignado %}
+                            {{ orden.pro_asignado.nombres }} {{ orden.pro_asignado.apellidos }}
+                        {% else %}
+                            <span class="text-muted">--- Sin Asignar ---</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <a href="{% url 'detalle_orden' orden.pk %}" class="btn btn-info btn-sm">Ver</a>
+                        <a href="{% url 'actualizar_orden' orden.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="{% url 'eliminar_orden' orden.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No hay órdenes de servicio registradas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

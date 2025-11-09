@@ -1,22 +1,25 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Crear Nueva Empresa</title>
-</head>
-<body>
-    <h1>Formulario de Empresa</h1>
+{% extends 'Pymes/base.html' %}
 
-    <form method="POST">
-        {% csrf_token %}
+{% block content %}
 
-        {{ form.as_p }}
-
-        <button type="submit">Guardar Empresa</button>
-    </form>
+    {% if form.instance.pk %}
+        <h1>Editar Empresa: {{ form.instance.razon_social }}</h1>
+    {% else %}
+        <h1>Crear Nueva Empresa</h1>
+    {% endif %}
 
     <hr>
-    <a href="{% url 'lista_empresas' %}">Cancelar y volver al listado</a>
 
-</body>
-</html>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success">Guardar</button>
+                <a href="{% url 'lista_empresas' %}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,17 +1,13 @@
 from django import forms
-from .models import Empresa, Servicio,  Profesional
+from .models import Empresa, Servicio,  Profesional, OrdenServicio
+
 
 class EmpresaForm(forms.ModelForm):
     """
-    Formulario de Django basado en el modelo Empresa.
-    ModelForm se encarga automáticamente de la validación
-    basada en los campos definidos en el modelo.
+    Formulario ModelForm para Empresa con widgets de Bootstrap.
     """
     class Meta:
-        # Le dice a ModelForm en qué modelo debe basarse
         model = Empresa
-
-        # Define qué campos del modelo se deben incluir en el formulario
         fields = [
             'rut', 
             'razon_social', 
@@ -21,6 +17,18 @@ class EmpresaForm(forms.ModelForm):
             'direccion', 
             'comuna'
         ]
+        
+        # 'widgets' le dice a Django cómo renderizar cada campo
+        widgets = {
+            'rut': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: 12345678-9'}),
+            'razon_social': forms.TextInput(attrs={'class': 'form-control'}),
+            'giro': forms.TextInput(attrs={'class': 'form-control'}),
+            'telefono': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: 912345678'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'ejemplo@empresa.cl'}),
+            'direccion': forms.TextInput(attrs={'class': 'form-control'}),
+            'comuna': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
 
 class ServicioForm(forms.ModelForm):
     """
@@ -68,3 +76,45 @@ class ProfesionalForm(forms.ModelForm):
             'especialidad': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
         }
+
+class OrdenServicioForm(forms.ModelForm):
+    """
+    Formulario ModelForm para OrdenServicio.
+    """
+    class Meta:
+        model = OrdenServicio
+        fields = [
+            'empresa',
+            'estado',
+            'prioridad',
+            'des_requerimiento',
+            'ser_seleccionados',
+            'pro_asignado',
+        ]
+        
+        # Esto (widgets) está perfecto, no lo toques
+        widgets = {
+            'empresa': forms.Select(attrs={'class': 'form-select'}),
+            'estado': forms.Select(attrs={'class': 'form-select'}),
+            'prioridad': forms.Select(attrs={'class': 'form-select'}),
+            'des_requerimiento': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'ser_seleccionados': forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
+            
+            'pro_asignado': forms.Select(attrs={'class': 'form-select'}),
+        }
+
+    
+    def __init__(self, *args, **kwargs):
+        """
+        Sobrescribe el init para hacer campos opcionales,
+        respetando lo definido en el models.py.
+        """
+        # Llama al 'init' original del formulario
+        super().__init__(*args, **kwargs)
+        
+        # Accede al campo 'pro_asignado' y le quita el 'required'
+        self.fields['pro_asignado'].required = False
+        
+        # Haz lo mismo para 'ser_seleccionados'
+        self.fields['ser_seleccionados'].required = False
+    

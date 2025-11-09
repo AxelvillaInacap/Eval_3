@@ -4,9 +4,9 @@
 
     <div class="alert alert-danger" role="alert">
         <h4 class="alert-heading">Confirmar Eliminación</h4>
-        <p>¿Estás seguro de que quieres eliminar permanentemente la empresa?</p>
+        <p>¿Estás seguro de que quieres eliminar permanentemente esta Orden de Servicio?</p>
         <hr>
-        <h2 class="mb-0">"{{ empresa.razon_social }}"</h2>
+        <h2 class="mb-0">"Orden #{{ orden.id }} - {{ orden.empresa.razon_social }}"</h2>
     </div>
 
     <form method="POST">
@@ -14,7 +14,7 @@
         
         <button type="submit" class="btn btn-danger">Sí, eliminar</button>
         
-        <a href="{% url 'detalle_empresa' empresa.pk %}" class="btn btn-secondary">Cancelar</a>
+        <a href="{% url 'detalle_orden' orden.pk %}" class="btn btn-secondary">Cancelar</a>
     </form>
 
 {% endblock %}

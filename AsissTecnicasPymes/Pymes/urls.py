@@ -49,4 +49,14 @@ urlpatterns = [
     
     # Permite eliminar un profesional existente
     path('profesional/<int:pk>/eliminar/', views.eliminar_profesional, name='eliminar_profesional'),
+
+    # --- MÓDULO: ORDEN DE SERVICIO ---
+    
+    path('ordenes/', views.lista_ordenes, name='lista_ordenes'),
+    path('orden/<int:pk>/', views.detalle_orden, name='detalle_orden'),
+    path('orden/<int:pk>/actualizar/', views.actualizar_orden, name='actualizar_orden'),
+    
+    # (GET, POST) /pymes/orden/5/eliminar/
+    path('orden/<int:pk>/eliminar/', views.eliminar_orden, name='eliminar_orden'),
+    path('orden/crear/', views.crear_orden_servicio, name='crear_orden_servicio'),
 ]

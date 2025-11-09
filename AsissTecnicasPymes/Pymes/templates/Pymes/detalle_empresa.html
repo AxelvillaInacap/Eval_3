@@ -1,24 +1,26 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Detalle: {{ empresa.razon_social }}</title>
-</head>
-<body>
-    <h1>{{ empresa.razon_social }}</h1>
+{% extends 'Pymes/base.html' %}
 
-    <h2>Información de la Empresa</h2>
-    <ul>
-        <li><strong>RUT:</strong> {{ empresa.rut }}</li>
-        <li><strong>Giro:</strong> {{ empresa.giro }}</li>
-        <li><strong>Teléfono:</strong> {{ empresa.telefono }}</li>
-        <li><strong>Email:</strong> {{ empresa.email }}</li>
-        <li><strong>Dirección:</strong> {{ empresa.direccion }}</li>
-        <li><strong>Comuna:</strong> {{ empresa.comuna }}</li>
-    </ul>
+{% block content %}
 
-    <hr>
+    <div class="card shadow-sm mb-3">
+        <div class="card-header">
+            <h1 class="h3 mb-0">{{ empresa.razon_social }}</h1>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>RUT:</strong> {{ empresa.rut }}</li>
+                <li class="list-group-item"><strong>Giro:</strong> {{ empresa.giro }}</li>
+                <li class="list-group-item"><strong>Teléfono:</strong> {{ empresa.telefono }}</li>
+                <li class="list-group-item"><strong>Email:</strong> {{ empresa.email }}</li>
+                <li class="list-group-item"><strong>Dirección:</strong> {{ empresa.direccion }}</li>
+                <li class="list-group-item"><strong>Comuna:</strong> {{ empresa.comuna }}</li>
+            </ul>
+        </div>
+        <div class="card-footer">
+            <a href="{% url 'actualizar_empresa' empresa.pk %}" class="btn btn-warning">Editar</a>
+            <a href="{% url 'eliminar_empresa' empresa.pk %}" class="btn btn-danger">Eliminar</a>
+            <a href="{% url 'lista_empresas' %}" class="btn btn-secondary">Volver al listado</a>
+        </div>
+    </div>
 
-    <a href="{% url 'lista_empresas' %}">Volver al listado</a>
-</body>
-</html>
+{% endblock %}

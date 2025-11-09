@@ -70,7 +70,7 @@ Cada módulo público posee su propia barra de búsqueda funcional.
 Sigue estos pasos para levantar el proyecto:
 
 ```bash
-git clone [URL_DE_TU_REPOSITORIO_GIT]
+git clone [https://github.com/AxelvillaInacap/Eval_3]
 cd Eval_3
 
 # Crear entorno virtual

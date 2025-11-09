@@ -4,8 +4,10 @@ from django.contrib import admin
 from django.urls import path, include
 # ¡NUEVO IMPORT! Importamos las vistas de autenticación de Django
 from django.contrib.auth import views as auth_views
+from django.views.generic import RedirectView
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='/admin/login/', permanent=True)),
     path('admin/', admin.site.urls),
     path('pymes/', include('Pymes.urls')), # Nuestras rutas de la app
     

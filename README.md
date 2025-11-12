@@ -96,7 +96,7 @@ python manage.py createsuperuser
 
 # Ejecutar servidor
 python manage.py runserver
-´´´
+```
 -----------------------------------
 
 ## 🧪 Cómo Probar la Aplicación

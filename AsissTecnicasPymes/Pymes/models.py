@@ -1,5 +1,39 @@
 from django.db import models
 
+
+def obtener_digito_verificador(rut):
+        rut = rut[::-1] # Invierte el RUT
+        suma = 0
+        multiplicador = 2
+        for digito in rut:
+            suma += int(digito) * multiplicador
+            multiplicador += 1
+            if multiplicador == 8:
+                multiplicador = 2
+        
+        resto = suma % 11
+        if resto == 0:
+            return "0"
+        elif resto == 1:
+            return "K"
+        else:
+            return str(11 - resto)
+
+def es_valido(rut):
+        try:
+            # Limpiar el RUT de puntos y guiones
+            rut = "".join(c for c in rut if c.isalnum())
+            if len(rut) < 2:
+                return False
+
+            numero_str = rut[:-1]
+            dv_ingresado = rut[-1].upper()
+
+            dv_calculado = obtener_digito_verificador(numero_str)
+
+            return dv_ingresado == dv_calculado
+        except Exception as e:
+            return False
 class Empresa(models.Model):
     rut = models.CharField(unique=True, max_length=10)
     razon_social = models.CharField(max_length=100, blank=False)
@@ -8,6 +42,9 @@ class Empresa(models.Model):
     email = models.EmailField(max_length=30)
     direccion = models.CharField(max_length=40)
     comuna = models.CharField(max_length=40)
+
+    if es_valido(rut):
+        raise ValueError("El RUT ingresado no es válido.")
 
     def __str__(self):
         return self.razon_social

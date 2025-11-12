@@ -7,7 +7,7 @@ from django.contrib.auth import views as auth_views
 from django.views.generic import RedirectView
 
 urlpatterns = [
-    path('', RedirectView.as_view(url='/admin/login/', permanent=True)),
+    path('', RedirectView.as_view(url='/login/', permanent=True)),
     path('admin/', admin.site.urls),
     path('pymes/', include('Pymes.urls')), # Nuestras rutas de la app
     

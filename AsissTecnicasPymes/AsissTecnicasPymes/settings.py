@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-p#doegu5t1!g-g9#758y6*oq^fe#1lm!w@cfs4f#(jg_5@x%!4'
 
-LOGIN_URL = '/admin/login/'
+LOGIN_URL = '/login/'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

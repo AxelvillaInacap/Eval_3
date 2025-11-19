@@ -1,136 +1,93 @@
-# (EVAL_3) Gestión de Asistencias Técnicas para PYMEs
+# (EVAL_3) Gestión de Asistencias Técnicas PYMES
 
-Este proyecto corresponde a la **Evaluación 3** de la asignatura **Programación Backend**.  
-Consiste en una aplicación web interna desarrollada en **Django**, destinada a gestionar asistencias técnicas para PYMEs locales.  
-Permite administrar solicitudes, servicios, profesionales asignados y empresas clientes.
-
----
+Este proyecto es la Evaluación 3 para la asignatura de Programación Backend. Es una aplicación web interna desarrollada en Django para gestionar asistencias técnicas a PYMEs locales, cubriendo la gestión de solicitudes, servicios, profesionales asignados y las empresas clientes.
 
 ## 👥 Integrantes del Equipo
-
-- **Axel Vilela Poblete**  
-  *Módulos:* `Empresa`, `OrdenServicio`, estructura base y autenticación.
-
-- **Juan Herrera**  
-  *Módulo:* `Servicio`.
-
-- **Sebastian Ovando**  
-  *Módulo:* `Profesional`.
+* **Axel Vilela Poblete** (Módulos: `Empresa`, `OrdenServicio`, Estructura Base, Autenticación y UI)
+* **Juan Herrera** (Módulo: `Servicio`)
+* **Sebastian Ovando** (Módulo: `Profesional`)
 
 ---
 
 ## ✨ Características Principales
+La aplicación cumple con todos los requisitos funcionales y añade mejoras de experiencia de usuario (UX):
 
-La aplicación cumple con todos los requisitos funcionales evaluados:
-
-### ✅ CRUD Completo
-Gestión total (Crear, Leer, Actualizar y Eliminar) de las 4 entidades:
-- Empresas  
-- Servicios  
-- Profesionales  
-- Órdenes de Servicio  
-
-### ✅ Modelo Relacional
-- `OrdenServicio` se relaciona con:
-  - `Empresa` (ForeignKey)  
-  - `Profesional` (ForeignKey)  
-  - `Servicio` (ManyToManyField)
-
-### ✅ Administración Avanzada
-El panel `/admin` incluye:
-- `list_display`  
-- `list_filter`  
-- `search_fields`  
-
-### ✅ Búsquedas y Filtros
-Cada módulo público posee su propia barra de búsqueda funcional.
-
-### ✅ Autenticación
-- Todas las acciones que modifican datos (Crear, Editar, Eliminar) requieren inicio de sesión.
-- Las vistas de lista y detalle son públicas.
-
-### ✅ Interfaz con Bootstrap
-- Plantilla base (`base.html`)
-- Bootstrap 5 (vía CDN)
-- Navbar responsiva y diseño limpio
-
----
+* **CRUD Completo:** Gestión total (Crear, Leer, Actualizar, Eliminar) para las 4 entidades: Empresas, Servicios, Profesionales y Órdenes de Servicio.
+* **Modelo Relacional:** Conexión robusta entre entidades mediante `ForeignKey` y `ManyToManyField`.
+* **Admin Avanzado:** Panel de administración personalizado con filtros, búsqueda y columnas específicas.
+* **Búsqueda Pública:** Barras de búsqueda funcionales en todos los listados principales.
+* **Seguridad:** Protección de vistas críticas con `@login_required` y sistema completo de Login/Logout.
+* **Interfaz Moderna (UI/UX):**
+    * **Tema Profesional:** Estilizado con Bootstrap 5 (Tema "Litera").
+    * **Modo Oscuro:** Interruptor integrado para cambiar entre tema Claro/Oscuro con detección automática del sistema.
+    * **Internacionalización (i18n):** Soporte configurado para cambio de idioma (Español/Inglés).
+    * **Dashboard:** Tablero de control principal con estadísticas y métricas en tiempo real.
 
 ## 🛠️ Stack Tecnológico
-
-- **Backend:** Python 3.11+  
-- **Framework:** Django 5.x  
-- **Base de Datos:** SQLite 3  
-- **Frontend:** HTML5 + Bootstrap 5
+* **Backend:** Python 3.11+
+* **Framework:** Django 5.x
+* **Base de Datos:** SQLite 3
+* **Frontend:** HTML5, Bootstrap 5 (Bootswatch), Bootstrap Icons, JavaScript
 
 ---
 
-## 🚀 Ejecución Local
+## 🚀 Instrucciones de Ejecución Local
 
-Sigue estos pasos para levantar el proyecto:
+Sigue estos pasos para levantar el proyecto en tu máquina:
 
+### 1. Clonar el Repositorio
 ```bash
-git clone [https://github.com/AxelvillaInacap/Eval_3]
+git clone [https://github.com/AxelvillaInacap/Eval_3](https://github.com/AxelvillaInacap/Eval_3)
 cd Eval_3
-
-# Crear entorno virtual
+```
+### 2. Crear y Activar Entorno Virtual
+```bash
+# Crear el venv (si no existe)
 python -m venv venv
 
-# Activar entorno (Windows)
+# Activar en Windows (PowerShell/CMD)
 .\venv\Scripts\activate
 
-# Activar entorno (macOS/Linux)
+# Activar en macOS/Linux
 # source venv/bin/activate
-
-# Instalar Django
-pip install django
-
-# Entrar a la carpeta del proyecto
+```
+### 3. Instalar Dependencias
+```bash
+pip intall django
+```
+### 4. Preparar la Base de Datos
+```bash
 cd AsissTecnicasPymes
-
-# Aplicar migraciones
 python manage.py migrate
-
-# Crear superusuario
+```
+### 5. Crear un SuperUsuario
+```bash
 python manage.py createsuperuser
-
-# Ejecutar servidor
+```
+### 6. Ejecuta el Servidor
+```bash
 python manage.py runserver
 ```
------------------------------------
+
+### 🚀🚀🚀 !El servidor estará corriendo en http://127.0.0.1:8000/! 🚀🚀🚀
+
+
 
 ## 🧪 Cómo Probar la Aplicación
 
-1. **Acceder al módulo principal:**  
-   Visita: `http://127.0.0.1:8000/pymes/ordenes/`
+1. **Login y Dashboard:**
+    * Al intentar entrar a cualquier función de crear/editar, serás redirigido al Login.
+    * Ingresa con tu superusuario. Serás recibido por el **Dashboard de Estadísticas**.
 
-2. **Comprobar la seguridad sin iniciar sesión:**  
-   - Intenta crear una nueva orden.  
-   - O intenta usar los botones **Editar** o **Eliminar** en cualquier vista.  
-   - Debes ser redirigido automáticamente a la página de **Login**: `/login/`.
+2. **Probar UI:**
+    * Haz clic en el icono de **Luna/Sol** en la barra superior para probar el Modo Oscuro.
+    * Haz clic en el icono del **Mundo** para probar el selector de idioma.
 
-3. **Iniciar sesión:**  
-   - Ingresa con el superusuario creado durante la instalación.  
-   - Tras iniciar sesión, volverás a la lista de órdenes.  
-   - En el navbar deberá aparecer: **"Hola, <tu_usuario>"**.
+3. **Flujo de Trabajo:**
+    * Navega a "Empresas", "Servicios" o "Profesionales" para crear los datos base.
+    * Ve a "Órdenes" y crea una nueva Orden de Servicio, conectando todos los datos anteriores.
 
-4. **Crear datos iniciales (necesario para que funcione el flujo):**  
-   Entra a: `http://127.0.0.1:8000/admin/`  
-   Y crea al menos:
-   - 1 **Empresa**  
-   - 1 **Servicio**  
-   - 1 **Profesional**
+4. **Gestión:**
+    * Utiliza los botones de acción (Ojo, Lápiz, Basura) en las tablas para Ver, Editar o Eliminar registros.
 
-5. **Probar el flujo completo de una Orden de Servicio:**  
-   - En `.../pymes/ordenes/`, haz clic en **"Crear Nueva Orden"**.  
-   - Completa el formulario (los select y checkboxes mostrarán los datos creados en el admin).  
-   - Guarda la orden.  
-   - Prueba los botones:
-     - **Ver**
-     - **Editar**
-     - **Eliminar**
 
-6. **Cerrar sesión:**  
-   - Haz clic en **"Cerrar Sesión"** en el navbar.  
-   - Serás deslogueado y redirigido a la página principal.  
-   - El navbar volverá a mostrar **"Iniciar Sesión"**.

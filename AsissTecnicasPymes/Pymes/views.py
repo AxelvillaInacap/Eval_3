@@ -422,3 +422,32 @@ def eliminar_orden(request, pk):
         'orden': orden
     }
     return render(request, 'pymes/orden_confirm_delete.html', contexto)
+
+@login_required
+def dashboard(request):
+    """
+    Vista principal con tarjetas de estadísticas.
+    """
+    # Contadores Generales
+    total_empresas = Empresa.objects.count()
+    total_servicios = Servicio.objects.count()
+    total_profesionales = Profesional.objects.count()
+    
+    # Contadores de Órdenes
+    ordenes_totales = OrdenServicio.objects.count()
+    ordenes_nuevas = OrdenServicio.objects.filter(estado='nueva').count()
+    ordenes_ejecucion = OrdenServicio.objects.filter(estado='en_ejecucion').count()
+    ordenes_finalizadas = OrdenServicio.objects.filter(estado='finalizada').count()
+    ordenes_canceladas = OrdenServicio.objects.filter(estado='cancelada').count()
+
+    context = {
+        'total_empresas': total_empresas,
+        'total_servicios': total_servicios,
+        'total_profesionales': total_profesionales,
+        'ordenes_totales': ordenes_totales,
+        'ordenes_nuevas': ordenes_nuevas,
+        'ordenes_ejecucion': ordenes_ejecucion,
+        'ordenes_finalizadas': ordenes_finalizadas,
+        'ordenes_canceladas': ordenes_canceladas,
+    }
+    return render(request, 'pymes/dashboard.html', context)

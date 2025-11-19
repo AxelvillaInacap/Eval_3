@@ -1,53 +1,71 @@
-{% extends 'Pymes/base.html' %} {% block content %}
-<h1>Listado de Servicios</h1>
+{% extends 'Pymes/base.html' %}
 
-<div class="mb-3">
-    <form method="GET" action="{% url 'lista_servicios' %}">
-        <div class="input-group">
-            <input type="text" class="form-control" name="q" value="{{ query|default:'' }}" placeholder="Buscar por nombre o categoría...">
-            <button class="btn btn-primary" type="submit">Buscar</button>
+{% block content %}
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Listado de Servicios</h1>
+        <a href="{% url 'crear_servicio' %}" class="btn btn-success">
+            <i class="bi bi-plus-lg"></i> Crear Nuevo Servicio
+        </a>
+    </div>
+
+    <div class="card mb-4 shadow-sm border-0">
+        <div class="card-body p-2">
+            <form method="GET" action="{% url 'lista_servicios' %}" class="d-flex gap-2">
+                <input type="text" name="q" class="form-control" placeholder="Buscar por nombre o categoría..." value="{{ query|default:'' }}">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
+            </form>
         </div>
-    </form>
-</div>
+    </div>
 
-<a href="{% url 'crear_servicio' %}" class="btn btn-success mb-3">Crear Nuevo Servicio</a>
-
-{% if servicios %}
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
+    <div class="table-responsive shadow-sm">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
                 <tr>
                     <th>Nombre</th>
                     <th>Categoría</th>
                     <th>Duración (Horas)</th>
                     <th>Estado</th>
-                    <th>Acciones</th>
+                    <th class="text-center">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {% for servicio in servicios %}
                 <tr>
-                    <td>{{ servicio.nombre }}</td>
+                    <td>
+                        <strong><a href="{% url 'detalle_servicio' servicio.pk %}" class="text-decoration-none">{{ servicio.nombre }}</a></strong>
+                    </td>
                     <td>{{ servicio.get_categoria_display }}</td>
-                    <td>{{ servicio.dur_est_horas }}</td> <td>
+                    <td>{{ servicio.dur_est_horas }}</td>
+                    <td>
                         {% if servicio.activo %}
                             <span class="badge bg-success">Activo</span>
                         {% else %}
                             <span class="badge bg-secondary">Inactivo</span>
                         {% endif %}
                     </td>
-                    <td>
-                        <a href="{% url 'detalle_servicio' servicio.pk %}" class="btn btn-info btn-sm">Ver</a>
-                        <a href="{% url 'actualizar_servicio' servicio.pk %}" class="btn btn-warning btn-sm">Editar</a>
-                        <a href="{% url 'eliminar_servicio' servicio.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+                    
+                    <td class="text-center">
+                        <div class="btn-group" role="group">
+                            <a href="{% url 'detalle_servicio' servicio.pk %}" class="btn btn-outline-info btn-sm" title="Ver">
+                                <i class="bi bi-eye-fill"></i>
+                            </a>
+                            <a href="{% url 'actualizar_servicio' servicio.pk %}" class="btn btn-outline-warning btn-sm" title="Editar">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <a href="{% url 'eliminar_servicio' servicio.pk %}" class="btn btn-outline-danger btn-sm" title="Eliminar">
+                                <i class="bi bi-trash-fill"></i>
+                            </a>
+                        </div>
                     </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center py-4 text-muted">No se encontraron servicios.</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-{% else %}
-    <p>No se encontraron servicios.</p>
-{% endif %}
 
 {% endblock %}

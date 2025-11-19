@@ -59,4 +59,6 @@ urlpatterns = [
     # (GET, POST) /pymes/orden/5/eliminar/
     path('orden/<int:pk>/eliminar/', views.eliminar_orden, name='eliminar_orden'),
     path('orden/crear/', views.crear_orden_servicio, name='crear_orden_servicio'),
+
+    path('dashboard/', views.dashboard, name='dashboard'),
 ]

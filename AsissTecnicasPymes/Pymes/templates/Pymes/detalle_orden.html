@@ -2,84 +2,99 @@
 
 {% block content %}
 
-    <div class="card shadow-sm mb-3">
-        <div class="card-header">
-            <h1 class="h3 mb-0">Detalle de Orden de Servicio #{{ orden.id }}</h1>
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0"><i class="bi bi-clipboard-data"></i> Orden de Servicio #{{ orden.id }}</h4>
+            <span class="badge bg-light text-dark">{{ orden.fecha_creacion|date:"d M Y" }}</span>
         </div>
         
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-8">
-                    <h4>Información Principal</h4>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <strong>Empresa:</strong> 
-                            <a href="{% url 'detalle_empresa' orden.empresa.pk %}">{{ orden.empresa.razon_social }}</a>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Profesional Asignado:</strong>
+            <div class="row g-4">
+                <div class="col-md-8 border-end">
+                    <h5 class="text-primary mb-3">Información Principal</h5>
+                    
+                    <div class="mb-3">
+                        <label class="text-muted small">EMPRESA CLIENTE</label>
+                        <div class="fs-5 fw-bold">
+                            <a href="{% url 'detalle_empresa' orden.empresa.pk %}" class="text-decoration-none">
+                                <i class="bi bi-building"></i> {{ orden.empresa.razon_social }}
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="text-muted small">PROFESIONAL ASIGNADO</label>
+                        <div class="fs-5">
                             {% if orden.pro_asignado %}
-                                <a href="{% url 'detalle_profesional' orden.pro_asignado.pk %}">{{ orden.pro_asignado.nombres }} {{ orden.pro_asignado.apellidos }}</a>
+                                <a href="{% url 'detalle_profesional' orden.pro_asignado.pk %}" class="text-decoration-none text-dark">
+                                    <i class="bi bi-person-check"></i> {{ orden.pro_asignado.nombres }} {{ orden.pro_asignado.apellidos }}
+                                </a>
                             {% else %}
-                                <span class="text-muted">--- Sin Asignar ---</span>
+                                <span class="text-danger fst-italic"><i class="bi bi-exclamation-circle"></i> Sin Asignar</span>
                             {% endif %}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Descripción del Requerimiento:</strong>
-                            <p>{{ orden.des_requerimiento|linebreaksbr }}</p>
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="text-muted small">DESCRIPCIÓN DEL REQUERIMIENTO</label>
+                        <div class="p-3 bg-light rounded border">
+                            {{ orden.des_requerimiento|linebreaksbr }}
+                        </div>
+                    </div>
                 </div>
+
                 <div class="col-md-4">
-                    <h4>Estado y Prioridad</h4>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <strong>Estado:</strong>
+                    <h5 class="text-primary mb-3">Estado del Proyecto</h5>
+                    
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Estado
                             {% if orden.estado == 'nueva' %}
-                                <span class="badge bg-primary">Nueva</span>
+                                <span class="badge bg-info rounded-pill">Nueva</span>
                             {% elif orden.estado == 'en_ejecucion' %}
-                                <span class="badge bg-warning text-dark">En Ejecución</span>
+                                <span class="badge bg-warning text-dark rounded-pill">En Ejecución</span>
                             {% elif orden.estado == 'finalizada' %}
-                                <span class="badge bg-success">Finalizada</span>
+                                <span class="badge bg-success rounded-pill">Finalizada</span>
                             {% else %}
-                                <span class="badge bg-danger">Cancelada</span>
+                                <span class="badge bg-danger rounded-pill">Cancelada</span>
                             {% endif %}
                         </li>
-                        <li class="list-group-item">
-                            <strong>Prioridad:</strong>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Prioridad
                             {% if orden.prioridad == 'alta' %}
-                                <span class="badge bg-danger">Alta</span>
+                                <span class="badge bg-danger rounded-pill">Alta</span>
                             {% elif orden.prioridad == 'media' %}
-                                <span class="badge bg-warning text-dark">Media</span>
+                                <span class="badge bg-warning text-dark rounded-pill">Media</span>
                             {% else %}
-                                <span class="badge bg-info">Baja</span>
+                                <span class="badge bg-success rounded-pill">Baja</span>
                             {% endif %}
-                        </li>
-                         <li class="list-group-item">
-                            <strong>Fecha de Creación:</strong>
-                            {{ orden.fecha_creacion }}
                         </li>
                     </ul>
+
+                    <h6 class="text-secondary mt-4">Servicios Incluidos:</h6>
+                    <div class="list-group list-group-flush">
+                        {% for servicio in orden.ser_seleccionados.all %}
+                            <a href="{% url 'detalle_servicio' servicio.pk %}" class="list-group-item list-group-item-action small">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i> {{ servicio.nombre }}
+                            </a>
+                        {% empty %}
+                            <div class="alert alert-warning small">No se seleccionaron servicios.</div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
-            <hr>
-            <h4>Servicios Seleccionados</h4>
-            <ul class="list-group">
-                {% for servicio in orden.ser_seleccionados.all %}
-                    <li class="list-group-item">
-                        <a href="{% url 'detalle_servicio' servicio.pk %}">{{ servicio.nombre }}</a>
-                        <span class="text-muted float-end">{{ servicio.get_categoria_display }}</span>
-                    </li>
-                {% empty %}
-                    <li class="list-group-item text-muted">No se seleccionaron servicios para esta orden.</li>
-                {% endfor %}
-            </ul>
         </div>
         
-        <div class="card-footer">
-            <a href="{% url 'actualizar_orden' orden.pk %}" class="btn btn-warning">Editar Orden</a>
-            <a href="{% url 'eliminar_orden' orden.pk %}" class="btn btn-danger">Eliminar Orden</a>
-            <a href="{% url 'lista_ordenes' %}" class="btn btn-secondary">Volver al listado</a>
+        <div class="card-footer text-end bg-light">
+            <a href="{% url 'lista_ordenes' %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Volver
+            </a>
+            <a href="{% url 'actualizar_orden' orden.pk %}" class="btn btn-warning text-white">
+                <i class="bi bi-pencil-fill"></i> Editar
+            </a>
+            <a href="{% url 'eliminar_orden' orden.pk %}" class="btn btn-danger">
+                <i class="bi bi-trash-fill"></i> Eliminar
+            </a>
         </div>
     </div>
 

@@ -50,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'AsissTecnicasPymes.urls'
@@ -125,6 +126,19 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+# Configuración de Idiomas
+from django.utils.translation import gettext_lazy as _
+
+LANGUAGE_CODE = 'es' # Idioma por defecto
+
+LANGUAGES = [
+    ('es', _('Español')),
+    ('en', _('English')),
+]
+
+USE_I18N = True
+
+
 # --- AÑADIR AL FINAL ---
-LOGIN_REDIRECT_URL = 'lista_ordenes' # A dónde ir después de un Login exitoso
+LOGIN_REDIRECT_URL = 'dashboard' # A dónde ir después de un Login exitoso
 LOGOUT_REDIRECT_URL = 'lista_ordenes' # A dónde ir después de un Logout exitoso

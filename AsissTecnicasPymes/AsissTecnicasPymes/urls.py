@@ -22,6 +22,10 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(
         template_name='pymes/logout.html'
     ), name='logout'),
+
+
+    # --- RUTA PARA CAMBIAR IDIOMA (NUEVO) ---
+    path('i18n/', include('django.conf.urls.i18n')),
     
     # --- FIN DE NUEVAS RUTAS ---
 ]
